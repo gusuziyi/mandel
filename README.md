@@ -3,6 +3,7 @@
 mandelbrot的难点在于：
 **1.运算量极为庞大，动辄使服务器崩溃**
 解决办法：将图像分解成数百行，平均分配给四个CPU同时计算，极大提高了稳定性和速度。
+```
 关键函数：function initWorker(taskInfo){
 	var workerNum=4;
 	var workers=[];
@@ -33,9 +34,11 @@ function getIdleWorker(workers,taskInfo){
 	}
 
 }
+```
 
 **2.M集与直角坐标系不同步的问题**
 解决办法：定义了“距离的像素长度”概念，不仅能正确在电脑上显示，还解决了缩放的问题
+```
 关键函数：function roomIn(x,y){
 	var room=1.5;
 	var mandelX=rmin+(rmax-rmin)*x/window.innerWidth;
@@ -49,9 +52,11 @@ function getIdleWorker(workers,taskInfo){
 	mandel();
 
 }
+```
 
 **3.对逃逸次数的捕获**
 解决办法：对M集复平面上的任意值c=a+bi进行逐点运算，对逃逸点赋予随机灰度escapeArray[i]* 255/maxiter，对黑洞点赋予随机噪点（200，maxiter*Math.random()，50）
+```
 关键函数：for (var i = 0; i < taskInfo.rowDataLength; i++) { 
 	 	var zN=new ComplexNum(0,0);
 		var cr=taskInfo.rmin+(taskInfo.rmax-taskInfo.rmin)*i/(taskInfo.canvasWidth);
@@ -69,3 +74,4 @@ function getIdleWorker(workers,taskInfo){
 			if(j==taskInfo.maxiter)//not escape   push maxiter used to color select
 				taskInfo.escapeArray.push(taskInfo.maxiter);
 	}
+```
